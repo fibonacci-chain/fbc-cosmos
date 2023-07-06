@@ -61,7 +61,7 @@ type Store struct {
 	pruneHeights        []int64
 	initialVersion      int64
 	archivalVersion     int64
-	orphanOpts          *iavltree.Options
+	noVersioning        bool
 
 	traceWriter       io.Writer
 	traceContext      types.TraceContext
@@ -504,8 +504,8 @@ func (rs *Store) Commit(bumpVersion bool) types.CommitID {
 // PruneStores will batch delete a list of heights from each mounted sub-store.
 // If clearStorePruningHeihgts is true, store's pruneHeights is appended to the
 // pruningHeights and reset after finishing pruning.
-func (rs *Store) PruneStores(clearStorePruningHeights bool, pruningHeights []int64) {
-	if clearStorePruningHeights {
+func (rs *Store) PruneStores(clearStorePruningHeihgts bool, pruningHeights []int64) {
+	if clearStorePruningHeihgts {
 		pruningHeights = append(pruningHeights, rs.pruneHeights...)
 	}
 
@@ -527,7 +527,7 @@ func (rs *Store) PruneStores(clearStorePruningHeights bool, pruningHeights []int
 		}
 	}
 
-	if clearStorePruningHeights {
+	if clearStorePruningHeihgts {
 		rs.pruneHeights = make([]int64, 0)
 	}
 }
@@ -950,9 +950,9 @@ func (rs *Store) loadCommitStoreFromParams(key types.StoreKey, id types.CommitID
 		var err error
 
 		if params.initialVersion == 0 {
-			store, err = iavl.LoadStore(db, rs.logger, key, id, rs.lazyLoading, rs.iavlCacheSize, rs.iavlDisableFastNode, rs.orphanOpts)
+			store, err = iavl.LoadStore(db, rs.logger, key, id, rs.lazyLoading, rs.iavlCacheSize, rs.iavlDisableFastNode, rs.noVersioning)
 		} else {
-			store, err = iavl.LoadStoreWithInitialVersion(db, rs.logger, key, id, rs.lazyLoading, params.initialVersion, rs.iavlCacheSize, rs.iavlDisableFastNode, rs.orphanOpts)
+			store, err = iavl.LoadStoreWithInitialVersion(db, rs.logger, key, id, rs.lazyLoading, params.initialVersion, rs.iavlCacheSize, rs.iavlDisableFastNode, rs.noVersioning)
 		}
 
 		if err != nil {
@@ -1048,8 +1048,8 @@ func (rs *Store) flushMetadata(db dbm.DB, version int64, cInfo *types.CommitInfo
 	rs.logger.Info("App State Saved height=%d hash=%X\n", cInfo.CommitID().Version, cInfo.CommitID().Hash)
 }
 
-func (rs *Store) SetOrphanConfig(opts *iavltree.Options) {
-	rs.orphanOpts = opts
+func (rs *Store) SetNoVersioning() {
+	rs.noVersioning = true
 }
 
 func (rs *Store) LastCommitInfo() *types.CommitInfo {

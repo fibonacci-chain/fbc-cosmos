@@ -10,7 +10,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/snapshots"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/iavl"
 )
 
 // File for storing in-package BaseApp optional functions,
@@ -41,8 +40,8 @@ func SetHaltTime(haltTime uint64) func(*BaseApp) {
 	return func(bapp *BaseApp) { bapp.setHaltTime(haltTime) }
 }
 
-func SetOrphanConfig(opts *iavl.Options) func(*BaseApp) {
-	return func(bapp *BaseApp) { bapp.setOrphanConfig(opts) }
+func SetNoVersioning(noVersioning bool) func(*BaseApp) {
+	return func(bapp *BaseApp) { bapp.setNoVersioning(noVersioning) }
 }
 
 // SetMinRetainBlocks returns a BaseApp option function that sets the minimum

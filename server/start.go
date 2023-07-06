@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"path"
 	"runtime/pprof"
 	"time"
 
@@ -57,19 +56,16 @@ const (
 	FlagProfile            = "profile"
 	FlagInvCheckPeriod     = "inv-check-period"
 
-	FlagPruning                      = "pruning"
-	FlagPruningKeepRecent            = "pruning-keep-recent"
-	FlagPruningKeepEvery             = "pruning-keep-every"
-	FlagPruningInterval              = "pruning-interval"
-	FlagIndexEvents                  = "index-events"
-	FlagMinRetainBlocks              = "min-retain-blocks"
-	FlagIAVLCacheSize                = "iavl-cache-size"
-	FlagIAVLFastNode                 = "iavl-disable-fastnode"
-	FlagCompactionInterval           = "compaction-interval"
-	FlagSeparateOrphanStorage        = "separate-orphan-storage"
-	FlagSeparateOrphanVersionsToKeep = "separate-orphan-versions-to-keep"
-	FlagNumOrphanPerFile             = "num-orphan-per-file"
-	FlagOrphanDirectory              = "orphan-dir"
+	FlagPruning            = "pruning"
+	FlagPruningKeepRecent  = "pruning-keep-recent"
+	FlagPruningKeepEvery   = "pruning-keep-every"
+	FlagPruningInterval    = "pruning-interval"
+	FlagIndexEvents        = "index-events"
+	FlagMinRetainBlocks    = "min-retain-blocks"
+	FlagIAVLCacheSize      = "iavl-cache-size"
+	FlagIAVLFastNode       = "iavl-disable-fastnode"
+	FlagCompactionInterval = "compaction-interval"
+	FlagNoVersioning       = "no-versioning"
 
 	// state sync-related flags
 	FlagStateSyncSnapshotInterval   = "state-sync.snapshot-interval"
@@ -247,10 +243,7 @@ is performed. Note, when enabled, gRPC will also be automatically enabled.
 	cmd.Flags().Uint(FlagInvCheckPeriod, 0, "Assert registered invariants every N blocks")
 	cmd.Flags().Uint64(FlagMinRetainBlocks, 0, "Minimum block height offset during ABCI commit to prune Tendermint blocks")
 	cmd.Flags().Uint64(FlagCompactionInterval, 0, "Time interval in between forced levelDB compaction. 0 means no forced compaction.")
-	cmd.Flags().Bool(FlagSeparateOrphanStorage, false, "Whether to store orphans outside main application levelDB")
-	cmd.Flags().Int64(FlagSeparateOrphanVersionsToKeep, 2, "Number of versions to keep if storing orphans separately")
-	cmd.Flags().Int(FlagNumOrphanPerFile, 100000, "Number of orphans to store on each file if storing orphans separately")
-	cmd.Flags().String(FlagOrphanDirectory, path.Join(defaultNodeHome, "orphans"), "Directory to store orphan files if storing orphans separately")
+	cmd.Flags().Bool(FlagNoVersioning, false, "Enable Profiling in the application")
 
 	cmd.Flags().Bool(flagGRPCOnly, false, "Start the node in gRPC query only mode (no Tendermint process is started)")
 	cmd.Flags().Bool(flagGRPCEnable, true, "Define if the gRPC server should be enabled")

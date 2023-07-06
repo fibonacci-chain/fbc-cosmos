@@ -622,14 +622,6 @@ func (suite *IntegrationTestSuite) TestWriteDeferredOperations() {
 	// verify that bank balances are only the original bank balances
 	suite.Require().Equal(bankBalances, app.BankKeeper.GetAllBalances(ctx, multiPermAcc.GetAddress()))
 
-	// test iterate over balances
-	totalDeferredBal := sdk.NewCoins()
-	app.BankKeeper.IterateDeferredBalances(ctx, func(addr sdk.AccAddress, coin sdk.Coin) bool {
-		totalDeferredBal = totalDeferredBal.Add(coin)
-		return false
-	})
-	suite.Require().Equal(deferredBalances, totalDeferredBal)
-
 	// write deferred balances
 	app.BankKeeper.WriteDeferredBalances(ctx)
 

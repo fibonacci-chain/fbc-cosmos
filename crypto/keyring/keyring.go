@@ -145,13 +145,7 @@ type Options struct {
 // purposes and on-the-fly key generation.
 // Keybase options can be applied when generating this new Keybase.
 func NewInMemory(opts ...Option) Keyring {
-	return NewInMemoryWithKeyring(keyring.NewArrayKeyring(nil), opts...)
-}
-
-// NewInMemoryWithKeyring returns an in memory keyring using the specified keyring.Keyring
-// as the backing keyring.
-func NewInMemoryWithKeyring(kr keyring.Keyring, opts ...Option) Keyring {
-	return newKeystore(kr, BackendMemory, opts...)
+	return newKeystore(keyring.NewArrayKeyring(nil), opts...)
 }
 
 // New creates a new instance of a keyring.
@@ -186,7 +180,7 @@ func New(
 		return nil, err
 	}
 
-	return newKeystore(db, backend, opts...), nil
+	return newKeystore(db, opts...), nil
 }
 
 type keystore struct {
@@ -194,7 +188,7 @@ type keystore struct {
 	options Options
 }
 
-func newKeystore(kr keyring.Keyring, backend string, opts ...Option) keystore {
+func newKeystore(kr keyring.Keyring, opts ...Option) keystore {
 	// Default options for keybase
 	options := Options{
 		SupportedAlgos:       SigningAlgoList{hd.Sr25519, hd.Secp256k1},
